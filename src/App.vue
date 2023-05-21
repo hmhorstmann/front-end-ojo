@@ -1,25 +1,29 @@
 <template>
   <h1>Hello World</h1>
+  <RouterView />
 </template>
 
-<script setup lang="ts">
+<script lang="ts">
+  export default {
+    setup() {},
+  }
 </script>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-}
-body {
-  background-color: '#E5E5E5';
-  color: '#000000';
-  -webkit-font-smoothing: 'antialiased';
-}
-body,
-input,
-textarea,
-button {
-  font-family: 'Fira Code', monospace;
-  font-weight: 400;
-}
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    background-color: '#E5E5E5';
+    color: '#000000';
+    -webkit-font-smoothing: 'antialiased';
+  }
+  body,
+  input,
+  textarea,
+  button {
+    font-family: 'Fira Code', monospace;
+    font-weight: 400;
+  }
 </style>
