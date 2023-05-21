@@ -4,9 +4,15 @@
 </template>
 
 <script lang="ts">
-  export default {
-    setup() {},
-  }
+  import { defineComponent } from 'vue'
+  import Navbar from './components/Navbar.vue'
+
+  export default defineComponent({
+    components: { Navbar },
+    setup() {
+      return {}
+    },
+  })
 </script>
 
 <style>
