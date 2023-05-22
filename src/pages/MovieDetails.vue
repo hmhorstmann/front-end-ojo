@@ -53,17 +53,17 @@
         <div class="personal">
           <div>
             <label for="name">Your Name:</label>
-            <input id="name" v-model="form.name" type="text" required />
+            <input id="name" v-model="formData.name" type="text" required />
           </div>
           <div>
             <label for="email">Your Email:</label>
-            <input id="email" v-model="form.email" type="email" required />
+            <input id="email" v-model="formData.email" type="email" required />
           </div>
         </div>
 
         <div class="message">
           <label for="review">Review:</label>
-          <textarea id="review" v-model="form.review" required></textarea>
+          <textarea id="review" v-model="formData.review" required></textarea>
         </div>
 
         <button type="submit" class="submit">Publish</button>
@@ -94,23 +94,25 @@
       const film = ref<Film>()
       const people = ref<Person[]>([])
 
-      const form = ref({
+      const formData = ref({
         name: '',
         email: '',
         review: '',
       })
 
-      const submitForm = () => {
+      const submitForm = async () => {
         try {
           console.log('Enviando Formulário...')
-          console.log(form.value)
+          const response = await axios.post(
+            'https://swapi.dev/api/review',
+            formData.value
+          )
+          console.log(response)
           console.info('Formulário Enviado!')
         } catch (error) {
           console.error(error)
+          console.info('Formulário NÃO Enviado!')
         }
-        console.log('Enviando Formulário...')
-        console.log(form.value)
-        console.info('Formulário Enviado!')
       }
 
       const getFilm = async () => {
@@ -164,7 +166,7 @@
           : []
       })
 
-      return { film, filmImageUrl, people, form, submitForm }
+      return { film, filmImageUrl, people, formData, submitForm }
     },
   })
 </script>
