@@ -34,6 +34,7 @@
     props: {
       title: {
         type: String as PropType<string>,
+        default: '',
         required: true,
       },
     },
