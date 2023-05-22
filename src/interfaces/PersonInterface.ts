@@ -18,5 +18,8 @@ export interface Person {
 }
 
 export interface PersonResponse {
+    count: number
+    next: string | null
+    previous: string | null
     results: Person[];
 }
