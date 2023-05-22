@@ -1,5 +1,5 @@
 <template>
-  <div class="film-card">
+  <div class="film-card" @click="getDetails(film)">
     <img :src="filmImageUrl" alt="Film Image" class="film-image" />
     <div class="film-details">
       <h3>{{ film.title }}</h3>
@@ -15,6 +15,7 @@
 <script lang="ts">
   import { defineComponent, ref } from 'vue'
   import { Film } from '../interfaces/FilmInterface'
+  import router from '../routes'
 
   export default defineComponent({
     props: {
@@ -28,8 +29,23 @@
         `src/assets/images/episode_${props.film.episode_id}.jpg`
       )
 
+      const getDetails = async (film: Film) => {
+        try {
+          const id = getId(film.url)
+          router.push(`/movie/${id}`)
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
+      const getId = (string: string): string => {
+        const arrayURL = string.split('films/')
+        return arrayURL[1].replace('/', '')
+      }
+
       return {
         filmImageUrl,
+        getDetails,
       }
     },
   })
@@ -43,6 +59,7 @@
     width: 268px;
     height: 464px;
     position: relative;
+    cursor: pointer;
   }
 
   .film-image {
