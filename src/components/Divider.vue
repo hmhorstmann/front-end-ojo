@@ -6,27 +6,6 @@
   </div>
 </template>
 
-<style scoped>
-  .divider {
-    margin: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .divider-line {
-    flex-grow: 1;
-    height: 1px;
-    background-color: black;
-  }
-
-  .divider-title {
-    margin: 0 10px;
-    font-weight: bold;
-    font-size: 1.2rem;
-  }
-</style>
-
 <script lang="ts">
   import { defineComponent, PropType } from 'vue'
 
@@ -40,3 +19,25 @@
     },
   })
 </script>
+
+<style scoped>
+  .divider {
+    margin: 2rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    align-self: center;
+  }
+
+  .divider-line {
+    flex-grow: 1;
+    height: 1px;
+    background-color: black;
+  }
+
+  .divider-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+</style>
