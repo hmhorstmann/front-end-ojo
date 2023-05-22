@@ -8,7 +8,8 @@
   >
     <Slide v-for="film in films" :key="film.episode_id">
       <div class="carousel__item">
-        <Card :film="film"></Card>
+        <CardFilm :film="film"></CardFilm>
+        
       </div>
     </Slide>
 
@@ -23,7 +24,7 @@
   import Divider from '../components/Divider.vue'
   import { API } from '../services/axios'
   import { Film, FilmResponse } from '../interfaces/FilmInterface'
-  import Card from '../components/Card.vue'
+  import CardFilm from '../components/CardFilm.vue'
   import 'vue3-carousel/dist/carousel.css'
   import { Carousel, Navigation, Slide } from 'vue3-carousel'
 
@@ -31,20 +32,25 @@
     name: 'Movies',
     components: {
       Divider,
-      Card,
+      CardFilm,
       Carousel,
       Slide,
       Navigation,
     },
     setup() {
       const films = ref<Film[]>([])
-      onMounted(async () => {
+      const getFilms = async () => {
         try {
           const response = await API.get<FilmResponse>('films')
           films.value = response.data.results
+          console.log('films', films.value)
         } catch (error) {
           console.error(error)
         }
+      }
+
+      onMounted(async () => {
+        await getFilms()
       })
 
       return { films }

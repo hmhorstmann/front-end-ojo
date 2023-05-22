@@ -56,6 +56,7 @@
   }
 
   .film-details {
+    flex-grow: 1;
     box-sizing: border-box;
     width: 268px;
     height: 140px;
@@ -71,6 +72,7 @@
   }
 
   h3 {
+    box-sizing: border-box;
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 4px;
@@ -87,5 +89,6 @@
     font-size: 12px;
     padding: 1rem;
     text-align: left;
+    width: 100%;
   }
 </style>
