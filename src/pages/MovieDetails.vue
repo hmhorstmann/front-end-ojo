@@ -25,7 +25,8 @@
     </div>
 
     <img
-      :src="`../../src/assets/images/episode_${film?.episode_id}.jpg`"
+        v-if="filmImageUrl"
+        :src="filmImageUrl"
       alt="Film Image"
       class="film-image"
     />
@@ -36,7 +37,7 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, onMounted, ref } from 'vue'
+  import { defineComponent, onMounted, ref, computed, ComputedRef } from 'vue'
   import { useRouter } from 'vue-router'
   import Divider from '../components/Divider.vue'
   import { Film } from '../interfaces/FilmInterface'
@@ -64,9 +65,19 @@ import { Person } from '../interfaces/PersonInterface'
         }
       }
 
+      const filmImageUrl: ComputedRef<string | null> = computed(() => {
+        const episode = film.value?.episode_id
+        if (episode) {
+          return `../../src/assets/images/episode_${episode}.jpg`
+        } else {
+          return null
+        }
+      })
+
       onMounted(async () => {
         await getFilm()
         filmImageUrl.value = `src/assets/images/episode_${film.value?.episode_id}.jpg`
+
         console.log('router', id)
       })
 
