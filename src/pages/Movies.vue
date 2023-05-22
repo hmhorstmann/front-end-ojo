@@ -17,6 +17,19 @@
       <Navigation />
     </template>
   </Carousel>
+
+  <Divider title="Characters"></Divider>
+  <Carousel :itemsToShow="3" :wrapAround="true">
+    <Slide v-for="person in people" :key="person.name">
+      <div class="carousel__item">
+        <CardPeople :person="person"></CardPeople>
+      </div>
+    </Slide>
+
+    <template #addons>
+      <Navigation />
+    </template>
+  </Carousel>
 </template>
 
 <script lang="ts">
@@ -24,7 +37,9 @@
   import Divider from '../components/Divider.vue'
   import { API } from '../services/axios'
   import { Film, FilmResponse } from '../interfaces/FilmInterface'
+  import { Person, PersonResponse } from '../interfaces/PersonInterface.js'
   import CardFilm from '../components/CardFilm.vue'
+  import CardPeople from '../components/CardPeople.vue'
   import 'vue3-carousel/dist/carousel.css'
   import { Carousel, Navigation, Slide } from 'vue3-carousel'
 
@@ -33,12 +48,16 @@
     components: {
       Divider,
       CardFilm,
+      CardPeople,
       Carousel,
       Slide,
       Navigation,
     },
+
     setup() {
       const films = ref<Film[]>([])
+      const people = ref<Person[]>([])
+
       const getFilms = async () => {
         try {
           const response = await API.get<FilmResponse>('films')
@@ -49,11 +68,22 @@
         }
       }
 
+      const getPeople = async () => {
+        try {
+          const response = await API.get<PersonResponse>('people')
+          people.value = response.data.results
+          console.log('people', people.value)
+        } catch (error) {
+          console.error(error)
+        }
+      }
+
       onMounted(async () => {
         await getFilms()
+        await getPeople()
       })
 
-      return { films }
+      return { films, people }
     },
   })
 </script>
@@ -61,13 +91,12 @@
 <style scoped>
   .carousel__item {
     width: 268px;
-    height: 464px;
+    min-height: 140px;
     font-size: 20px;
     border-radius: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px;
   }
 
   .carousel__slide {
