@@ -1,7 +1,6 @@
 <template>
   <Navbar />
   <main>
-    <h1>Hello World</h1>
     <RouterView />
   </main>
 </template>
@@ -40,5 +39,7 @@
 
   main {
     margin-top: 6rem;
+    padding: 1rem 10rem;
+    /* padding: 1rem; */
   }
 </style>
