@@ -38,7 +38,14 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, onMounted, ref } from 'vue'
+  import {
+    computed,
+    defineComponent,
+    onMounted,
+    onUpdated,
+    ref,
+    watch,
+  } from 'vue'
   import Divider from '../components/Divider.vue'
   // import { API } from '../services/axios'
   import axios from 'axios'
@@ -48,6 +55,7 @@
   import CardPeople from '../components/CardPeople.vue'
   import 'vue3-carousel/dist/carousel.css'
   import { Carousel, Navigation, Slide } from 'vue3-carousel'
+  import { useSearchStore } from '../stores/searchStore'
 
   export default defineComponent({
     name: 'Movies',
@@ -61,8 +69,10 @@
     },
 
     setup() {
+      const storeSearch = useSearchStore()
       const films = ref<Film[]>([])
       const people = ref<Person[]>([])
+      const originalPeople = ref<Person[]>([])
 
       const peopleCarousel = ref<any>()
 
@@ -79,12 +89,16 @@
         }
       }
 
-      const getPeople = async (page: number = 1): Promise<Person[]> => {
+      const getPeople = async (
+        url: string | null = null
+      ): Promise<Person[]> => {
         try {
           const response = await axios.get<PersonResponse>(
-            `https://swapi.dev/api/people/?page=${page}`
+            url ? url : `https://swapi.dev/api/people/?page=1`
           )
-          loadedPages.value.push(page)
+          const arrayUrl = url?.split('page=')
+          const pageNumber = arrayUrl?.length ? parseInt(arrayUrl[1]) : 1
+          loadedPages.value.push(pageNumber)
           data.value = response.data
           return response.data.results
           // people.value = response.data.results
@@ -94,16 +108,46 @@
         }
       }
 
+      const search = computed(() => {
+        return storeSearch.search
+      })
+
+      watch(search, (currentSearch) => {
+        console.log({ currentSearch })
+        handleSearch(currentSearch)
+      })
+
+      const handleSearch = async (currentSearch: string | undefined) => {
+        loadedPages.value = [1]
+        if (currentSearch && currentSearch.length) {
+          const searchUrl = `https://swapi.dev/api/people/?search=${currentSearch}&page=1`
+          people.value = await getPeople(searchUrl)
+        } else {
+          people.value = await getPeople()
+        }
+      }
+
       onMounted(async () => {
         films.value = await getFilms()
         people.value = await getPeople()
+        originalPeople.value = people.value.map((item) => item)
+      })
+
+      onUpdated(() => {
+        console.log('UPoriginal', originalPeople.value)
+        console.log('UPpeople', people.value)
       })
 
       const loadedPages = ref<number[]>([])
       const data = ref<PersonResponse>()
 
       const loop = async (param: any) => {
+        console.log(param)
+        console.log(people.value)
         if (param.currentSlideIndex == param.slidesCount - 3) {
+          console.log('data', data.value)
+          // console.log('serach', search.value)
+          // console.log('serach', search.value?.length)
           const url = data.value?.next
           const arrayUrl = url?.split('page=')
           const pageNumber = arrayUrl?.length ? parseInt(arrayUrl[1]) : 1
@@ -112,8 +156,11 @@
           // const arroundCount = count ? Math.ceil(count / 10) : 0
 
           if (!loadedPages.value.includes(pageNumber)) {
-            const newPage = await getPeople(pageNumber)
+            const newPage = await getPeople(url)
             people.value = people.value.concat(newPage)
+            originalPeople.value = originalPeople.value.concat(newPage)
+            console.log('original', originalPeople.value)
+            console.log('people', people.value)
           }
         }
       }
