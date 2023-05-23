@@ -26,7 +26,7 @@
     },
     setup(props) {
       const filmImageUrl = ref<string>(
-        `src/assets/images/episode_${props.film.episode_id}.jpg`
+        `assets/images/episode_${props.film.episode_id}.jpg`
       )
 
       const getDetails = async (film: Film) => {
