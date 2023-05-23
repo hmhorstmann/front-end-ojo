@@ -26,7 +26,6 @@
         </div>
       </div>
 
-      <!-- :src="`../../src/assets/images/episode_${film?.episode_id}.jpg`" -->
       <img
         v-if="filmImageUrl"
         :src="filmImageUrl"
@@ -111,16 +110,13 @@
   import { Film } from '../interfaces/FilmInterface'
   import { Person } from '../interfaces/PersonInterface'
   import { Review } from '../interfaces/ReviewInterface'
-  // import { API } from '../services/axios'
   import axios from 'axios'
   import { Carousel, Navigation, Slide } from 'vue3-carousel'
   import 'vue3-carousel/dist/carousel.css'
   import { useReviewStore } from '../stores/reviewStore'
   import { useSearchStore } from '../stores/searchStore'
-
   import CardPeople from '../components/CardPeople.vue'
   import CardReview from '../components/CardReview.vue'
-
   import LoadingOverlay from '../components/LoadingOverlay.vue'
   import { useLoadingStore } from '../stores/loadingStore'
 
@@ -217,7 +213,6 @@
       })
 
       watch(search, (currentSearch) => {
-        console.log({ currentSearch })
         handleSearch(currentSearch)
       })
 

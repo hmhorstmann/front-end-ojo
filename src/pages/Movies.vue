@@ -41,16 +41,8 @@
 </template>
 
 <script lang="ts">
-  import {
-    computed,
-    defineComponent,
-    onMounted,
-    onUpdated,
-    ref,
-    watch,
-  } from 'vue'
+  import { computed, defineComponent, onMounted, ref, watch } from 'vue'
   import Divider from '../components/Divider.vue'
-  // import { API } from '../services/axios'
   import axios from 'axios'
   import { Film, FilmResponse } from '../interfaces/FilmInterface'
   import { Person, PersonResponse } from '../interfaces/PersonInterface.js'
@@ -88,9 +80,7 @@
           const response = await axios.get<FilmResponse>(
             'https://swapi.dev/api/films/'
           )
-
           return response.data.results
-          // films.value = response.data.results
         } catch (error) {
           console.error(error)
           throw error
@@ -109,7 +99,6 @@
           loadedPages.value.push(pageNumber)
           data.value = response.data
           return response.data.results
-          // people.value = response.data.results
         } catch (error) {
           console.error(error)
           throw error
@@ -121,14 +110,12 @@
       })
 
       watch(search, (currentSearch) => {
-        console.log({ currentSearch })
         handleSearch(currentSearch)
       })
 
       const handleSearch = async (currentSearch: string | undefined) => {
         loadedPages.value = [1]
         if (currentSearch && currentSearch.length) {
-          console.log('current', currentSearch)
           try {
             storeLoading.setLoading(true)
             const searchUrl = `https://swapi.dev/api/people/?search=${currentSearch}&page=1`
@@ -156,11 +143,6 @@
         storeLoading.setLoading(false)
       })
 
-      onUpdated(() => {
-        console.log('UPoriginal', originalPeople.value)
-        console.log('UPpeople', people.value)
-      })
-
       const loadedPages = ref<number[]>([])
       const data = ref<PersonResponse>()
 
@@ -169,14 +151,9 @@
         console.log(people.value)
         if (param.currentSlideIndex == param.slidesCount - 3) {
           console.log('data', data.value)
-          // console.log('serach', search.value)
-          // console.log('serach', search.value?.length)
           const url = data.value?.next
           const arrayUrl = url?.split('page=')
           const pageNumber = arrayUrl?.length ? parseInt(arrayUrl[1]) : 1
-
-          // const count = data.value?.count
-          // const arroundCount = count ? Math.ceil(count / 10) : 0
 
           if (!loadedPages.value.includes(pageNumber)) {
             const newPage = await getPeople(url)
