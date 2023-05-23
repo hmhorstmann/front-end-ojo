@@ -202,7 +202,7 @@
       const filmImageUrl: ComputedRef<string | null> = computed(() => {
         const episode = film.value?.episode_id
         if (episode) {
-          return `../../src/assets/images/episode_${episode}.jpg`
+          return `/images/episode_${episode}.jpg`
         } else {
           return null
         }
