@@ -1,4 +1,5 @@
 <template>
+  <LoadingOverlay />
   <div class="container">
     <Divider :title="film?.title"></Divider>
     <section class="container-details">
@@ -35,7 +36,11 @@
     </section>
 
     <Divider title="Characters of the movie"></Divider>
-    <Carousel :itemsToShow="3" :wrapAround="true">
+    <Carousel
+      v-if="people && people.length"
+      :itemsToShow="3"
+      :wrapAround="true"
+    >
       <Slide v-for="person in people" :key="person.name">
         <div class="carousel__item">
           <CardPeople :person="person"></CardPeople>
@@ -43,9 +48,10 @@
       </Slide>
 
       <template #addons>
-        <Navigation />
+        <Navigation v-if="people && people.length" />
       </template>
     </Carousel>
+    <p v-else>Nenhum personagem encontrado!</p>
 
     <Divider title="Write a Review"></Divider>
     <section class="container-form">
@@ -115,6 +121,9 @@
   import CardPeople from '../components/CardPeople.vue'
   import CardReview from '../components/CardReview.vue'
 
+  import LoadingOverlay from '../components/LoadingOverlay.vue'
+  import { useLoadingStore } from '../stores/loadingStore'
+
   export default defineComponent({
     name: 'MovieDetails',
     components: {
@@ -124,8 +133,10 @@
       Carousel,
       Navigation,
       Slide,
+      LoadingOverlay,
     },
     setup() {
+      const storeLoading = useLoadingStore()
       const storeSearch = useSearchStore()
       const storeReview = useReviewStore()
       const router = useRouter()
@@ -142,6 +153,7 @@
       })
 
       const submitForm = async () => {
+        storeLoading.setLoading(true)
         try {
           formData.value.episode = film.value?.episode_id
           console.log('Enviando Formulário...')
@@ -163,6 +175,7 @@
             email: '',
             review: '',
           }
+          storeLoading.setLoading(false)
         }
       }
 
@@ -213,6 +226,9 @@
           people.value = originalPeople.value.filter((item) => {
             return item.name.toLowerCase().includes(currentSearch.toLowerCase())
           })
+          // if (!people.value.length) {
+          //   people.value = originalPeople.value.filter((item) => item)
+          // }
         } else {
           people.value = originalPeople.value.filter((item) => item)
         }
@@ -223,6 +239,7 @@
       })
 
       onMounted(async () => {
+        storeLoading.setLoading(true)
         storeReview.loadReviewsFromLocalStorage()
         film.value = await getFilm()
         const characters = film.value?.characters
@@ -240,6 +257,7 @@
             )
           : []
         originalPeople.value = people.value.map((item) => item)
+        storeLoading.setLoading(false)
       })
 
       return {

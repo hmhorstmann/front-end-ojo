@@ -1,4 +1,5 @@
 <template>
+  <LoadingOverlay />
   <Divider title="Movies"></Divider>
   <Carousel
     :modelValue="1"
@@ -20,6 +21,7 @@
 
   <Divider title="Characters"></Divider>
   <Carousel
+    v-if="people && people.length"
     ref="peopleCarousel"
     :itemsToShow="3"
     :wrapAround="true"
@@ -32,9 +34,10 @@
     </Slide>
 
     <template #addons>
-      <Navigation />
+      <Navigation v-if="people && people.length" />
     </template>
   </Carousel>
+  <p v-else>Nenhum personagem encontrado!</p>
 </template>
 
 <script lang="ts">
@@ -56,6 +59,8 @@
   import 'vue3-carousel/dist/carousel.css'
   import { Carousel, Navigation, Slide } from 'vue3-carousel'
   import { useSearchStore } from '../stores/searchStore'
+  import LoadingOverlay from '../components/LoadingOverlay.vue'
+  import { useLoadingStore } from '../stores/loadingStore'
 
   export default defineComponent({
     name: 'Movies',
@@ -66,9 +71,11 @@
       Carousel,
       Slide,
       Navigation,
+      LoadingOverlay,
     },
 
     setup() {
+      const storeLoading = useLoadingStore()
       const storeSearch = useSearchStore()
       const films = ref<Film[]>([])
       const people = ref<Person[]>([])
@@ -81,6 +88,7 @@
           const response = await axios.get<FilmResponse>(
             'https://swapi.dev/api/films/'
           )
+
           return response.data.results
           // films.value = response.data.results
         } catch (error) {
@@ -120,17 +128,32 @@
       const handleSearch = async (currentSearch: string | undefined) => {
         loadedPages.value = [1]
         if (currentSearch && currentSearch.length) {
-          const searchUrl = `https://swapi.dev/api/people/?search=${currentSearch}&page=1`
-          people.value = await getPeople(searchUrl)
+          console.log('current', currentSearch)
+          try {
+            storeLoading.setLoading(true)
+            const searchUrl = `https://swapi.dev/api/people/?search=${currentSearch}&page=1`
+            people.value = await getPeople(searchUrl)
+            storeLoading.setLoading(false)
+          } catch (error) {
+            console.error(error)
+          }
         } else {
-          people.value = await getPeople()
+          try {
+            storeLoading.setLoading(true)
+            people.value = await getPeople()
+            storeLoading.setLoading(false)
+          } catch (error) {
+            console.error(error)
+          }
         }
       }
 
       onMounted(async () => {
+        storeLoading.setLoading(true)
         films.value = await getFilms()
         people.value = await getPeople()
         originalPeople.value = people.value.map((item) => item)
+        storeLoading.setLoading(false)
       })
 
       onUpdated(() => {
