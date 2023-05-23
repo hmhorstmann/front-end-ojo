@@ -8,20 +8,33 @@
     </template>
 
     <template #end>
-      <InputText placeholder="Pesquisar Personagens" type="text" class="search" />
+      <InputText
+        v-model="searchName"
+        placeholder="Pesquisar Personagens"
+        type="text"
+        class="search"
+        @keydown.enter="searchChar()"
+      />
     </template>
   </Menubar>
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue'
+  import { defineComponent, ref } from 'vue'
   import Menubar from 'primevue/menubar'
   import InputText from 'primevue/inputtext'
+  import { useSearchStore } from '../stores/searchStore'
 
   export default defineComponent({
     components: { Menubar, InputText },
     setup() {
-      return {}
+      const storeSearch = useSearchStore()
+      const searchName = ref<string | undefined>()
+      const searchChar = () => {
+        storeSearch.setSeach(searchName.value)
+      }
+
+      return { searchName, searchChar }
     },
   })
 </script>
@@ -35,15 +48,14 @@
   .title {
     color: #ffffff;
     margin-left: 4rem;
-
   }
   .search {
     margin: 0 2rem;
-    padding: 0 1rem ;
+    padding: 0 1rem;
     width: 20rem;
     height: 2rem;
     text-align: right;
-    border-radius: 0.5rem ;
+    border-radius: 0.5rem;
   }
   .logo {
     margin-left: 0.5rem;
