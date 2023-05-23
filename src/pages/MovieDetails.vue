@@ -69,6 +69,9 @@
         <button type="submit" class="submit">Publish</button>
       </form>
     </section>
+    <p v-if="review">
+      {{ review }}
+    </p>
   </div>
 </template>
 
@@ -77,11 +80,13 @@
   import { useRouter } from 'vue-router'
   import Divider from '../components/Divider.vue'
   import { Film } from '../interfaces/FilmInterface'
+  import { Person } from '../interfaces/PersonInterface'
+  import { Review } from '../interfaces/ReviewInterface'
   // import { API } from '../services/axios'
   import axios from 'axios'
-  import { Person } from '../interfaces/PersonInterface'
   import { Carousel, Navigation, Slide } from 'vue3-carousel'
   import 'vue3-carousel/dist/carousel.css'
+  import { useReviewStore } from '../stores/reviewStore'
 
   import CardPeople from '../components/CardPeople.vue'
 
@@ -89,12 +94,14 @@
     name: 'MovieDetails',
     components: { Divider, CardPeople, Carousel, Navigation, Slide },
     setup() {
+      const storeReview = useReviewStore()
       const router = useRouter()
       const id = router.currentRoute.value.params.id
       const film = ref<Film>()
       const people = ref<Person[]>([])
 
-      const formData = ref({
+      const formData = ref<Review>({
+        episode: 0,
         name: '',
         email: '',
         review: '',
@@ -102,6 +109,7 @@
 
       const submitForm = async () => {
         try {
+          formData.value.episode = film.value?.episode_id
           console.log('Enviando Formulário...')
           const response = await axios.post(
             'https://swapi.dev/api/review',
@@ -112,6 +120,9 @@
         } catch (error) {
           console.error(error)
           console.info('Formulário NÃO Enviado!')
+        } finally {
+          storeReview.addReview(formData.value)
+          storeReview.saveReviewsToLocalStorage()
         }
       }
 
@@ -148,7 +159,12 @@
         }
       })
 
+      const review = computed(() => {
+        return storeReview.getReviewsByEpisode(film.value?.episode_id)
+      })
+
       onMounted(async () => {
+        storeReview.loadReviewsFromLocalStorage()
         film.value = await getFilm()
         const characters = film.value?.characters
 
@@ -166,7 +182,7 @@
           : []
       })
 
-      return { film, filmImageUrl, people, formData, submitForm }
+      return { film, filmImageUrl, people, formData, submitForm, review }
     },
   })
 </script>
