@@ -1,18 +1,66 @@
-# Vue 3 + TypeScript + Vite
+# Front-end OJO
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Este é um projeto de front-end desenvolvido com Vue.js para exibir informações sobre filmes e personagens da saga Star Wars.
 
-## Recommended IDE Setup
+## Instalação
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+1. Clone este repositório:
+```javascript
+/* Certifique-se de substituir <seu-usuario> na etapa de clonagem pelo seu nome de usuário correto no GitHub. */
+git clone https://github.com/seu-usuario/front-end-ojo.git
+```
 
-## Type Support For `.vue` Imports in TS
+2. Navegue até o diretório do projeto:
+```
+cd front-end-ojo
+```
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+3. Instale as dependências:
+```
+npm install
+```
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+4. Execute o projeto em modo de desenvolvimento:
+```
+npm run dev
+```
 
-1. Disable the built-in TypeScript Extension
-   1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-   2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+5. Acesse o aplicativo em seu navegador:
+```
+http://localhost:****
+```
+
+## Funcionalidades
+
+- Exibição de filmes da saga Star Wars em um carrossel.
+- Exibição de personagens relacionados a cada filme.
+- Possibilidade de pesquisar personagens por nome.
+- Visualização dos detalhes de um filme específico.
+- Adição de reviews sobre os filmes.
+
+## Tecnologias Utilizadas
+
+- Vue.js
+- Vue Router
+- Axios
+- PrimeVue
+- TypeScript
+- Vite
+
+## Estrutura do Projeto
+
+- `src`
+- `assets`: Recursos estáticos como imagens.
+- `components`: Componentes reutilizáveis.
+- `interfaces`: Interfaces TypeScript para as entidades do projeto.
+- `pages`: Componentes de página.
+- `stores`: Armazenamento de estado com o Pinia.
+- `App.vue`: Componente raiz do aplicativo.
+- `main.ts`: Arquivo principal do Vue.js.
+
+## Status do Projeto
+
+Este projeto ainda está em desenvolvimento e não foi concluído. Algumas áreas que precisam de atenção são:
+
+- O CSS atual precisa ser melhorado para tornar o projeto mais bonito e atraente visualmente.
+- A responsividade ainda não foi implementada, portanto, o projeto pode não ser totalmente otimizado para diferentes dispositivos e tamanhos de tela.
