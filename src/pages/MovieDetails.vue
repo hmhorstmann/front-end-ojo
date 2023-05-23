@@ -1,4 +1,5 @@
 <template>
+  {{ search }}
   <div class="container">
     <Divider :title="film?.title"></Divider>
     <section class="container-details">
@@ -76,7 +77,14 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, onMounted, ref, computed, ComputedRef } from 'vue'
+  import {
+    defineComponent,
+    onMounted,
+    ref,
+    computed,
+    ComputedRef,
+    watch,
+  } from 'vue'
   import { useRouter } from 'vue-router'
   import Divider from '../components/Divider.vue'
   import { Film } from '../interfaces/FilmInterface'
@@ -87,6 +95,7 @@
   import { Carousel, Navigation, Slide } from 'vue3-carousel'
   import 'vue3-carousel/dist/carousel.css'
   import { useReviewStore } from '../stores/reviewStore'
+  import { useSearchStore } from '../stores/searchStore'
 
   import CardPeople from '../components/CardPeople.vue'
 
@@ -94,11 +103,13 @@
     name: 'MovieDetails',
     components: { Divider, CardPeople, Carousel, Navigation, Slide },
     setup() {
+      const storeSearch = useSearchStore()
       const storeReview = useReviewStore()
       const router = useRouter()
       const id = router.currentRoute.value.params.id
       const film = ref<Film>()
       const people = ref<Person[]>([])
+      const originalPeople = ref<Person[]>([])
 
       const formData = ref<Review>({
         episode: 0,
@@ -159,6 +170,28 @@
         }
       })
 
+      const search = computed(() => {
+        return storeSearch.search
+      })
+
+      watch(search, (currentSearch) => {
+        console.log({ currentSearch })
+        handleSearch(currentSearch)
+      })
+
+      const handleSearch = (currentSearch: string | undefined) => {
+        if (currentSearch && currentSearch.length) {
+          console.log('OLELE VERDDE')
+          people.value = originalPeople.value.filter((item) => {
+            console.log(item.name)
+            console.log(currentSearch)
+            return item.name.includes(currentSearch)
+          })
+        } else {
+          people.value = originalPeople.value.filter((item) => item)
+        }
+      }
+
       const review = computed(() => {
         return storeReview.getReviewsByEpisode(film.value?.episode_id)
       })
@@ -180,9 +213,18 @@
               })
             )
           : []
+        originalPeople.value = people.value.map((item) => item)
       })
 
-      return { film, filmImageUrl, people, formData, submitForm, review }
+      return {
+        film,
+        filmImageUrl,
+        people,
+        formData,
+        submitForm,
+        review,
+        search,
+      }
     },
   })
 </script>
@@ -302,5 +344,6 @@
     font-size: 16px;
     line-height: 21px;
     color: #000000;
+    cursor: pointer;
   }
 </style>
