@@ -1,5 +1,4 @@
 <template>
-  {{ search }}
   <div class="container">
     <Divider :title="film?.title"></Divider>
     <section class="container-details">
@@ -70,9 +69,25 @@
         <button type="submit" class="submit">Publish</button>
       </form>
     </section>
-    <p v-if="review">
-      {{ review }}
-    </p>
+
+    <Divider v-if="review && review.length" title="Reviews"></Divider>
+    <Carousel
+      v-if="review && review.length"
+      dir="rtl"
+      :modelValue="review.length - 1"
+      :itemsToShow="3"
+      :wrapAround="true"
+    >
+      <Slide v-for="(reviewItem, index) in review" :key="index">
+        <div class="carousel__item">
+          <CardReview :review="reviewItem"></CardReview>
+        </div>
+      </Slide>
+
+      <template #addons>
+        <Navigation v-if="review && review.length" />
+      </template>
+    </Carousel>
   </div>
 </template>
 
@@ -98,10 +113,18 @@
   import { useSearchStore } from '../stores/searchStore'
 
   import CardPeople from '../components/CardPeople.vue'
+  import CardReview from '../components/CardReview.vue'
 
   export default defineComponent({
     name: 'MovieDetails',
-    components: { Divider, CardPeople, Carousel, Navigation, Slide },
+    components: {
+      Divider,
+      CardPeople,
+      CardReview,
+      Carousel,
+      Navigation,
+      Slide,
+    },
     setup() {
       const storeSearch = useSearchStore()
       const storeReview = useReviewStore()
@@ -134,6 +157,12 @@
         } finally {
           storeReview.addReview(formData.value)
           storeReview.saveReviewsToLocalStorage()
+          formData.value = {
+            episode: 0,
+            name: '',
+            email: '',
+            review: '',
+          }
         }
       }
 
@@ -342,5 +371,6 @@
     line-height: 21px;
     color: #000000;
     cursor: pointer;
+    margin-bottom: 2rem;
   }
 </style>
