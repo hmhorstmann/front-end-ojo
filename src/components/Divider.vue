@@ -39,5 +39,6 @@
   .divider-title {
     font-weight: bold;
     font-size: 1.2rem;
+    padding: 0 1rem;
   }
 </style>

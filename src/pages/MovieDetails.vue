@@ -181,11 +181,8 @@
 
       const handleSearch = (currentSearch: string | undefined) => {
         if (currentSearch && currentSearch.length) {
-          console.log('OLELE VERDDE')
           people.value = originalPeople.value.filter((item) => {
-            console.log(item.name)
-            console.log(currentSearch)
-            return item.name.includes(currentSearch)
+            return item.name.toLowerCase().includes(currentSearch.toLowerCase())
           })
         } else {
           people.value = originalPeople.value.filter((item) => item)
