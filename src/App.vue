@@ -38,8 +38,7 @@
   }
 
   main {
-    margin-top: 6rem;
-    padding: 1rem 10rem;
-    /* padding: 1rem; */
+    margin: 6rem 169px 0;
+    padding: 1rem 5rem;
   }
 </style>
