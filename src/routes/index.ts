@@ -5,13 +5,7 @@ import MovieDetails from "../pages/MovieDetails.vue"
 const routes = [
     {
         path: "/",
-        redirect: {
-            name: 'movies'
-        },
-    },
-    {
-        path: "/movies",
-        name: "movies",
+        name: 'movies',
         component: Movies,
     },
     {
